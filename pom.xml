@@ -20,5 +20,18 @@
         </plugins>
     </build>
 
+    <properties>
+        <version.junit>4.12</version.junit>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 
 </project>

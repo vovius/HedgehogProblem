@@ -11,29 +11,42 @@ public class HedgehogWalk {
     private int[][] apples;
     private int[][] walkField;
 
+    private final static String INPUT_FILE = System.getProperty("user.dir") + "\\input.txt";
+    private final static String OUTPUT_FILE = System.getProperty("user.dir") + "\\output.txt";
+
     public HedgehogWalk(int[][] apples) {
         this.apples = apples;
     }
 
     public int walk() {
-        initForWalk();
-        fillWalkField();
-        return walkField[walkField.length-1][walkField[0].length-1];
+        if (initForWalk()) {
+            fillWalkField();
+            return walkField[walkField.length - 1][walkField[0].length - 1];
+        }
+
+        return 0;
     }
 
-    private void initForWalk() {
-        walkField = new int[apples.length][apples[0].length];
+    private boolean initForWalk() {
+        if (apples.length > 0 && apples[0].length > 0) {
+            walkField = new int[apples.length][apples[0].length];
+            return true;
+        }
+
+        return false;
     }
 
     private void fillWalkField() {
-        walkField[0][0] = apples[0][0];
-        for (int i=0; i < apples.length; i++)
-            for(int j=0; j < apples[i].length; j++) {
-                if (i+1 <= apples.length-1)
-                    fillWalkFieldCell(i, j, i+1, j);
-                if (j+1 <= apples[i].length-1)
-                    fillWalkFieldCell(i, j, i, j+1);
-            }
+        if (apples.length > 0 && apples[0].length > 0) {
+            walkField[0][0] = apples[0][0];
+            for (int i = 0; i < apples.length; i++)
+                for (int j = 0; j < apples[i].length; j++) {
+                    if (i + 1 <= apples.length - 1)
+                        fillWalkFieldCell(i, j, i + 1, j);
+                    if (j + 1 <= apples[i].length - 1)
+                        fillWalkFieldCell(i, j, i, j + 1);
+                }
+        }
     }
 
     private void fillWalkFieldCell(int fromI, int fromJ, int toI, int toJ) {
@@ -48,14 +61,17 @@ public class HedgehogWalk {
     }
 
     public static void main(String[] args) {
-        int[][] array = HedgehogWalkHelper.createArrayWithRandomData(4,4);
-        HedgehogWalkHelper.printArray(array, "Before:");
+        //int[][] array = HedgehogWalkHelper.createArrayWithRandomData(4,4);
+        int[][] array = HedgehogWalkHelper.createArrayFromFile(INPUT_FILE);
+        if (array != null) {
+            HedgehogWalkHelper.printArray(array, "Before:");
 
-        HedgehogWalk hedgehogWalk = new HedgehogWalk(array);
-        hedgehogWalk.walk();
+            HedgehogWalk hedgehogWalk = new HedgehogWalk(array);
+            hedgehogWalk.walk();
 
-        boolean[][] walkFootprints = HedgehogWalkHelper.fillFootprints(hedgehogWalk.getWalkField());
-        HedgehogWalkHelper.printArrayWithFootprints(hedgehogWalk.getWalkField(), "After:", walkFootprints);
+            HedgehogWalkHelper.printArray(hedgehogWalk.getWalkField(), "After:");
+            HedgehogWalkHelper.writeResultOfWalking(hedgehogWalk.getWalkField(), OUTPUT_FILE);
+        }
 
     }
 }
